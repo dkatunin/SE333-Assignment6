@@ -1,1 +1,29 @@
+name: SE333 CI
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Static Analysis Java Checkstyle Before Tests
+        run: mvn validate
+
+      - name: Upload Checkstyle Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: target/site/checkstyle.html
+
+      - name: Run Jacoco Tests
+        run: mvn test
+
+      - name: Upload Jacoco Tests
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/index.html
