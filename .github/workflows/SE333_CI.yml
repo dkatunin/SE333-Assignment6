@@ -10,8 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Static Analysis Java Checkstyle Before Tests
-        run: mvn validate
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run Checkstyle Analysis
+        run: mvn checkstyle:checkstyle
 
       - name: Upload Checkstyle Report
         uses: actions/upload-artifact@v4
@@ -19,10 +28,10 @@ jobs:
           name: checkstyle-report
           path: target/site/checkstyle.html
 
-      - name: Run Jacoco Tests
-        run: mvn test
+      - name: Run Tests with Jacoco Coverage
+        run: mvn test jacoco:report
 
-      - name: Upload Jacoco Tests
+      - name: Upload Jacoco Report
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
